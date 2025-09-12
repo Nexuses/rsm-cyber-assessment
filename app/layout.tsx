@@ -5,9 +5,12 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.app',
+  title: 'RSM Cyber Assessment Tool',
+  description: 'RSM Cyber Assessment Tool',
+  generator: 'RSM Cyber Assessment Tool',
+  icons: {
+    icon: 'https://22527425.fs1.hubspotusercontent-na2.net/hubfs/22527425/RSM%20Kuwait%20ESG/Favicon.png',
+  },
 }
 
 export default function RootLayout({
