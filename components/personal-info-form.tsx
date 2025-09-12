@@ -48,7 +48,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
   }
 
   const submitToAPI = async (data: PersonalInfo) => {
-    const apiUrl = "https://5bfe6b98616c4954acb4cb09b2abb6.70.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/05c19af3d01f4163a1bb54363eac16cf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=UlW5W3SrBYr6HRAUMJtOGPXIdKxzMfT_e9wPbPk7b8E"
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://5bfe6b98616c4954acb4cb09b2abb6.70.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/05c19af3d01f4163a1bb54363eac16cf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=UlW5W3SrBYr6HRAUMJtOGPXIdKxzMfT_e9wPbPk7b8E"
     
     console.log('Sending data to API:', {
       firstName: data.firstName,
