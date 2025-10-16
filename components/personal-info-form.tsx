@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import type { PersonalInfo } from "@/app/page"
+import type { PersonalInfo } from "@/lib/api"
 
 interface PersonalInfoFormProps {
   initialData: PersonalInfo
@@ -47,57 +47,12 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
     return Object.keys(newErrors).length === 0
   }
 
-  const submitToAPI = async (data: PersonalInfo) => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://5bfe6b98616c4954acb4cb09b2abb6.70.environment.api.powerplatform.com/powerautomate/automations/direct/workflows/05c19af3d01f4163a1bb54363eac16cf/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=UlW5W3SrBYr6HRAUMJtOGPXIdKxzMfT_e9wPbPk7b8E"
-    
-    console.log('Sending data to API:', {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      email: data.email,
-      companyName: data.companyName,
-      jobTitle: data.jobTitle
-    })
-    
-    try {
-      const response = await fetch(apiUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          firstName: data.firstName,
-          lastName: data.lastName,
-          email: data.email,
-          companyName: data.companyName,
-          jobTitle: data.jobTitle
-        })
-      })
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-      
-      console.log('Data submitted successfully to API')
-    } catch (error) {
-      console.error('Error submitting to API:', error)
-      // Continue with form submission even if API fails
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (validateForm()) {
       setIsSubmitting(true)
-      try {
-        await submitToAPI(formData)
-        onSubmit(formData)
-      } catch (error) {
-        console.error('Error during form submission:', error)
-        // Still proceed with form submission even if API fails
-        onSubmit(formData)
-      } finally {
-        setIsSubmitting(false)
-      }
+      onSubmit(formData)
+      setIsSubmitting(false)
     }
   }
 

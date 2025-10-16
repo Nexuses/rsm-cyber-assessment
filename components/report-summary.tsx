@@ -4,9 +4,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
-import type { PersonalInfo, AssessmentAnswer } from "@/app/page"
+import type { PersonalInfo, AssessmentAnswer, CategoryScore, OverallScore } from "@/lib/api"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts"
-import { Download, RotateCcw, CheckCircle, AlertTriangle, XCircle } from "lucide-react"
+import { RotateCcw, CheckCircle, AlertTriangle, XCircle } from "lucide-react"
 
 interface ReportSummaryProps {
   personalInfo: PersonalInfo
@@ -15,30 +15,34 @@ interface ReportSummaryProps {
 }
 
 export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummaryProps) {
-  // Calculate scores by category
-  const categoryScores = {
-    CG: { name: "Cyber Governance", total: 0, max: 0, questions: 0 },
-    ID: { name: "Identify", total: 0, max: 0, questions: 0 },
-    PR: { name: "Protect", total: 0, max: 0, questions: 0 },
-    DE: { name: "Detect", total: 0, max: 0, questions: 0 },
-    RS: { name: "Respond", total: 0, max: 0, questions: 0 },
-    RC: { name: "Recover", total: 0, max: 0, questions: 0 },
+  // Calculate scores by category using the new structure
+  const categoryScores: Record<string, CategoryScore> = {
+    CG: { name: "Cyber Governance", total: 0, max: 0, questions: 0, percentage: 0 },
+    ID: { name: "Identify", total: 0, max: 0, questions: 0, percentage: 0 },
+    PR: { name: "Protect", total: 0, max: 0, questions: 0, percentage: 0 },
+    DE: { name: "Detect", total: 0, max: 0, questions: 0, percentage: 0 },
+    RS: { name: "Respond", total: 0, max: 0, questions: 0, percentage: 0 },
+    RC: { name: "Recover", total: 0, max: 0, questions: 0, percentage: 0 },
   }
 
-  const scoreMap = { yes: 5, partial: 2.5, no: 0 }
   let totalScore = 0
   let maxPossibleScore = 0
 
   answers.forEach((answer) => {
     const category = answer.questionId.split("-")[0].toUpperCase()
-    if (categoryScores[category as keyof typeof categoryScores]) {
-      const score = scoreMap[answer.answer]
-      categoryScores[category as keyof typeof categoryScores].total += score
-      categoryScores[category as keyof typeof categoryScores].max += 5
-      categoryScores[category as keyof typeof categoryScores].questions += 1
+    if (categoryScores[category]) {
+      const score = answer.score
+      categoryScores[category].total += score
+      categoryScores[category].max += 5
+      categoryScores[category].questions += 1
       totalScore += score
       maxPossibleScore += 5
     }
+  })
+
+  // Calculate percentages
+  Object.values(categoryScores).forEach(category => {
+    category.percentage = category.max > 0 ? (category.total / category.max) * 100 : 0
   })
 
   const overallPercentage = maxPossibleScore > 0 ? (totalScore / maxPossibleScore) * 100 : 0
@@ -53,8 +57,8 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
   }))
 
   const pieData = [
-    { name: "Achieved", value: totalScore, color: "#164e63" },
-    { name: "Remaining", value: maxPossibleScore - totalScore, color: "#f97316" },
+    { name: "Achieved", value: totalScore, color: "#2D9C2D" },
+    { name: "Remaining", value: maxPossibleScore - totalScore, color: "#009CD9" },
   ]
 
   const getMaturityLevel = (percentage: number) => {
@@ -67,29 +71,6 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
   const maturity = getMaturityLevel(overallPercentage)
   const MaturityIcon = maturity.icon
 
-  const handleDownloadReport = () => {
-    // In a real application, this would generate and download a PDF report
-    const reportData = {
-      personalInfo,
-      answers,
-      scores: categoryScores,
-      totalScore,
-      maxPossibleScore,
-      overallPercentage,
-      maturityLevel: maturity.level,
-      generatedAt: new Date().toISOString(),
-    }
-
-    const dataStr = JSON.stringify(reportData, null, 2)
-    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
-
-    const exportFileDefaultName = `cybersecurity-assessment-${personalInfo.organizationName.replace(/\s+/g, "-").toLowerCase()}-${new Date().toISOString().split("T")[0]}.json`
-
-    const linkElement = document.createElement("a")
-    linkElement.setAttribute("href", dataUri)
-    linkElement.setAttribute("download", exportFileDefaultName)
-    linkElement.click()
-  }
 
   return (
     <div className="space-y-6">
@@ -107,13 +88,13 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
             <h3 className="font-semibold text-card-foreground mb-3">Assessment Details</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
-                <strong>Organization:</strong> {personalInfo.organizationName}
+                <strong>Organization:</strong> {personalInfo.companyName}
               </div>
               <div>
-                <strong>Assessed by:</strong> {personalInfo.yourName}
+                <strong>Assessed by:</strong> {personalInfo.firstName} {personalInfo.lastName}
               </div>
               <div>
-                <strong>Department:</strong> {personalInfo.department}
+                <strong>Job Title:</strong> {personalInfo.jobTitle}
               </div>
               <div>
                 <strong>Assessment Date:</strong> {new Date(personalInfo.assessmentDate).toLocaleDateString()}
@@ -157,7 +138,7 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
                     return item ? `${item.category} - ${item.name}` : label
                   }}
                 />
-                <Bar dataKey="percentage" fill="#164e63" />
+                <Bar dataKey="percentage" fill="#2D9C2D" />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -208,11 +189,11 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
           </div>
           <div className="flex justify-center gap-6 mt-4">
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-primary rounded"></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#2D9C2D" }}></div>
               <span className="text-sm">Achieved ({totalScore} pts)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-4 h-4 bg-accent rounded"></div>
+              <div className="w-4 h-4 rounded" style={{ backgroundColor: "#009CD9" }}></div>
               <span className="text-sm">Remaining ({maxPossibleScore - totalScore} pts)</span>
             </div>
           </div>
@@ -220,15 +201,7 @@ export function ReportSummary({ personalInfo, answers, onRestart }: ReportSummar
       </Card>
 
       {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        <Button
-          onClick={handleDownloadReport}
-          size="lg"
-          className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white"
-        >
-          <Download className="mr-2 h-5 w-5" />
-          Download Report
-        </Button>
+      <div className="flex justify-center">
         <Button onClick={onRestart} variant="outline" size="lg">
           <RotateCcw className="mr-2 h-5 w-5" />
           Start New Assessment

@@ -6,21 +6,9 @@ import { GuidelinesSection } from "@/components/guidelines-section"
 import { AssessmentQuestions } from "@/components/assessment-questions"
 import { ReportSummary } from "@/components/report-summary"
 import { Progress } from "@/components/ui/progress"
-
-export interface PersonalInfo {
-  firstName: string
-  lastName: string
-  email: string
-  companyName: string
-  jobTitle: string
-  assessmentDate: string
-}
-
-export interface AssessmentAnswer {
-  questionId: string
-  answer: "yes" | "partial" | "no"
-  comment?: string
-}
+import { Toast, useToast } from "@/components/ui/toast"
+import type { PersonalInfo, AssessmentAnswer, AssessmentData } from "@/lib/api"
+import { submitAssessment, calculateScores } from "@/lib/api"
 
 export default function CyberAssessmentTool() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -33,6 +21,7 @@ export default function CyberAssessmentTool() {
     assessmentDate: new Date().toISOString().split("T")[0],
   })
   const [answers, setAnswers] = useState<AssessmentAnswer[]>([])
+  const { toasts, showToast, removeToast } = useToast()
 
   const totalSteps = 4
   const progress = (currentStep / totalSteps) * 100
@@ -46,8 +35,45 @@ export default function CyberAssessmentTool() {
     setCurrentStep(3)
   }
 
-  const handleAssessmentComplete = (assessmentAnswers: AssessmentAnswer[]) => {
+  const handleAssessmentComplete = async (assessmentAnswers: AssessmentAnswer[]) => {
     setAnswers(assessmentAnswers)
+    
+    // Calculate scores
+    const { categoryScores, overallScore } = calculateScores(assessmentAnswers)
+    
+    // Prepare assessment data for API submission
+    const assessmentData: AssessmentData = {
+      personalInfo,
+      assessmentAnswers,
+      scoring: {
+        categoryScores,
+        overallScore,
+      },
+      metadata: {
+        assessmentVersion: "NIST CSF 2.0",
+        generatedAt: new Date().toISOString(),
+        totalQuestions: assessmentAnswers.length,
+        answeredQuestions: assessmentAnswers.length,
+        completionPercentage: 100.0,
+      },
+    }
+
+    // Submit to API
+    try {
+      console.log('Submitting assessment data:', assessmentData)
+      const result = await submitAssessment(assessmentData)
+      if (result.success) {
+        console.log('Assessment submitted successfully:', result.data)
+        showToast('Assessment submitted successfully!', 'success')
+      } else {
+        console.error('Failed to submit assessment:', result.error)
+        showToast(`Failed to submit assessment: ${result.error}`, 'error')
+      }
+    } catch (error) {
+      console.error('Error submitting assessment:', error)
+      showToast(`Error submitting assessment: ${error instanceof Error ? error.message : 'Unknown error'}`, 'error')
+    }
+
     setCurrentStep(4)
   }
 
@@ -66,6 +92,16 @@ export default function CyberAssessmentTool() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Toast Notifications */}
+      {toasts.map((toast) => (
+        <Toast
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
+      ))}
+
       {/* Header */}
       <div className="bg-primary text-white">
         <div className="px-6 py-12">
