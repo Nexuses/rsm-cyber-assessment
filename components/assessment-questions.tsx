@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, Ship as Skip, Loader2 } from "lucide-react"
+import { ChevronLeft, Loader2 } from "lucide-react"
 import type { AssessmentAnswer, AssessmentQuestion } from "@/lib/api"
 import { fetchAssessmentQuestions } from "@/lib/api"
 
@@ -23,6 +23,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
   const [answers, setAnswers] = useState<AssessmentAnswer[]>([])
   const [currentAnswer, setCurrentAnswer] = useState<"yes" | "partial" | "no" | "">("")
   const [currentComment, setCurrentComment] = useState("")
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // Load questions from API
   useEffect(() => {
@@ -46,8 +47,9 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
   const progress = assessmentQuestions.length > 0 ? ((currentQuestionIndex + 1) / assessmentQuestions.length) * 100 : 0
 
   const handleAnswerChange = (value: "yes" | "partial" | "no") => {
-    if (!currentQuestion) return
+    if (!currentQuestion || isProcessing) return
 
+    setIsProcessing(true)
     setCurrentAnswer(value)
 
     // Save current answer
@@ -78,23 +80,10 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
         // Complete assessment
         onComplete(updatedAnswers)
       }
+      setIsProcessing(false)
     }, 300)
   }
 
-  const handleSkip = () => {
-    if (currentQuestionIndex < assessmentQuestions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
-
-      // Load existing answer if available
-      const nextQuestion = assessmentQuestions[currentQuestionIndex + 1]
-      const existingAnswer = answers.find((a) => a.questionId === nextQuestion.id)
-      setCurrentAnswer(existingAnswer?.answer || "")
-      setCurrentComment(existingAnswer?.comment || "")
-    } else {
-      // Complete assessment even if last question is skipped
-      onComplete(answers)
-    }
-  }
 
   const handlePrevious = () => {
     if (currentQuestionIndex > 0) {
@@ -189,9 +178,12 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
           <div className="flex gap-4">
             <button
               onClick={() => handleAnswerChange("yes")}
+              disabled={isProcessing}
               className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
                 currentAnswer === "yes"
-                  ? "bg-[#2D9C2D] text-[#2D9C2D] border-[#2D9C2D]"
+                  ? "bg-[#2D9C2D] text-white border-[#2D9C2D]"
+                  : isProcessing
+                  ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white border-gray-200 hover:border-[#2D9C2D] hover:bg-gray-50"
               }`}
             >
@@ -200,9 +192,12 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
 
             <button
               onClick={() => handleAnswerChange("partial")}
+              disabled={isProcessing}
               className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
                 currentAnswer === "partial"
-                  ? "bg-yellow-400 text-yellow-600 border-yellow-400"
+                  ? "bg-yellow-400 text-yellow-900 border-yellow-400"
+                  : isProcessing
+                  ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white border-gray-200 hover:border-yellow-400 hover:bg-gray-50"
               }`}
             >
@@ -211,9 +206,12 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
 
             <button
               onClick={() => handleAnswerChange("no")}
+              disabled={isProcessing}
               className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
                 currentAnswer === "no"
-                  ? "bg-red-500 text-red-600 border-red-500"
+                  ? "bg-red-500 text-white border-red-500"
+                  : isProcessing
+                  ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
                   : "bg-white border-gray-200 hover:border-red-500 hover:bg-gray-50"
               }`}
             >
@@ -245,10 +243,9 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             {currentQuestionIndex === 0 ? "Back to Guidelines" : "Previous"}
           </Button>
 
-          <Button onClick={handleSkip} variant="outline" className="flex items-center gap-2 bg-transparent">
-            <Skip className="h-4 w-4" />
-            Skip
-          </Button>
+          <div className="text-sm text-red-600 flex items-center">
+            All questions are mandatory
+          </div>
         </div>
       </CardContent>
     </Card>
