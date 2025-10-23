@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -24,6 +24,8 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
   const [currentAnswer, setCurrentAnswer] = useState<"yes" | "partial" | "no" | "">("")
   const [currentComment, setCurrentComment] = useState("")
   const [isProcessing, setIsProcessing] = useState(false)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const hasCompletedRef = useRef(false)
 
   // Load questions from API
   useEffect(() => {
@@ -43,11 +45,25 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
     loadQuestions()
   }, [])
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
+
   const currentQuestion = assessmentQuestions[currentQuestionIndex]
   const progress = assessmentQuestions.length > 0 ? ((currentQuestionIndex + 1) / assessmentQuestions.length) * 100 : 0
 
   const handleAnswerChange = (value: "yes" | "partial" | "no") => {
-    if (!currentQuestion || isProcessing) return
+    if (!currentQuestion || isProcessing || hasCompletedRef.current) return
+
+    // Clear any existing timeout
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
 
     setIsProcessing(true)
     setCurrentAnswer(value)
@@ -67,7 +83,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
     setAnswers(updatedAnswers)
 
     // Auto-advance to next question after a short delay
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       if (currentQuestionIndex < assessmentQuestions.length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1)
 
@@ -77,10 +93,14 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
         setCurrentAnswer(existingAnswer?.answer || "")
         setCurrentComment(existingAnswer?.comment || "")
       } else {
-        // Complete assessment
-        onComplete(updatedAnswers)
+        // Complete assessment - prevent multiple calls
+        if (!hasCompletedRef.current) {
+          hasCompletedRef.current = true
+          onComplete(updatedAnswers)
+        }
       }
       setIsProcessing(false)
+      timeoutRef.current = null
     }, 300)
   }
 
