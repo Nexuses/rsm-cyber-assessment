@@ -140,7 +140,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
 
   if (loading) {
     return (
-      <Card className="bg-card border-0 shadow-xl">
+      <Card className="bg-card border border-primary/40 shadow-2xl rounded-xl">
         <CardContent className="flex items-center justify-center py-12">
           <div className="flex flex-col items-center gap-4">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -153,7 +153,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
 
   if (assessmentQuestions.length === 0) {
     return (
-      <Card className="bg-card border-0 shadow-xl">
+      <Card className="bg-card border border-primary/40 shadow-2xl rounded-xl">
         <CardContent className="flex items-center justify-center py-12">
           <div className="text-center">
             <p className="text-muted-foreground">Failed to load assessment questions. Please try again.</p>
@@ -164,7 +164,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
   }
 
   return (
-    <Card className="bg-card border-0 shadow-xl">
+    <Card className="bg-card border border-primary/40 shadow-2xl rounded-xl">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -184,11 +184,11 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             )}
           </div>
         </div>
-        <Progress value={progress} className="mt-4" />
+        <Progress value={progress} className="mt-4 h-2" />
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <div className="bg-muted p-6 rounded-lg">
+        <div className="p-6 rounded-lg border border-primary/20 bg-primary/5">
           <h3 className="text-lg font-medium text-card-foreground text-balance">{currentQuestion.question}</h3>
         </div>
 
@@ -199,7 +199,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             <button
               onClick={() => handleAnswerChange("yes")}
               disabled={isProcessing}
-              className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
+              className={`flex-1 p-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#2D9C2D]/40 ${
                 currentAnswer === "yes"
                   ? "bg-[#2D9C2D] text-white border-[#2D9C2D]"
                   : isProcessing
@@ -213,7 +213,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             <button
               onClick={() => handleAnswerChange("partial")}
               disabled={isProcessing}
-              className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
+              className={`flex-1 p-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-400/40 ${
                 currentAnswer === "partial"
                   ? "bg-yellow-400 text-yellow-900 border-yellow-400"
                   : isProcessing
@@ -227,7 +227,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             <button
               onClick={() => handleAnswerChange("no")}
               disabled={isProcessing}
-              className={`flex-1 p-4 rounded-lg border-2 transition-all duration-200 ${
+              className={`flex-1 p-4 rounded-xl border-2 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500/40 ${
                 currentAnswer === "no"
                   ? "bg-red-500 text-white border-red-500"
                   : isProcessing
@@ -249,7 +249,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             value={currentComment}
             onChange={(e) => setCurrentComment(e.target.value)}
             placeholder="Please provide additional details about your current processes, tools, challenges, or concerns..."
-            className="min-h-[100px]"
+            className="min-h-[100px] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/60"
           />
         </div>
 
@@ -257,7 +257,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
           <Button
             variant="outline"
             onClick={currentQuestionIndex === 0 ? onBack : handlePrevious}
-            className="flex items-center gap-2 bg-transparent"
+            className="flex items-center gap-2 bg-transparent hover:bg-primary/10 border-primary/30 hover:text-secondary"
           >
             <ChevronLeft className="h-4 w-4" />
             {currentQuestionIndex === 0 ? "Back to Guidelines" : "Previous"}

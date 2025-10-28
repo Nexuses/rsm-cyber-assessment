@@ -64,7 +64,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
   }
 
   return (
-    <Card className="bg-card border-0 shadow-xl">
+    <Card className="bg-card border border-primary/40 shadow-2xl rounded-xl">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl text-card-foreground">Personal Information</CardTitle>
         <CardDescription className="text-muted-foreground">
@@ -82,7 +82,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange("firstName", e.target.value)}
-                className={errors.firstName ? "border-destructive" : ""}
+                className={(errors.firstName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your first name"
               />
               {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
@@ -96,7 +96,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
-                className={errors.lastName ? "border-destructive" : ""}
+                className={(errors.lastName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your last name"
               />
               {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
@@ -111,7 +111,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={errors.email ? "border-destructive" : ""}
+                className={(errors.email ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="your.email@company.com"
               />
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
@@ -125,7 +125,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="companyName"
                 value={formData.companyName}
                 onChange={(e) => handleInputChange("companyName", e.target.value)}
-                className={errors.companyName ? "border-destructive" : ""}
+                className={(errors.companyName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your company name"
               />
               {errors.companyName && <p className="text-sm text-destructive">{errors.companyName}</p>}
@@ -139,7 +139,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="jobTitle"
                 value={formData.jobTitle}
                 onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                className={errors.jobTitle ? "border-destructive" : ""}
+                className={(errors.jobTitle ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your job title"
               />
               {errors.jobTitle && <p className="text-sm text-destructive">{errors.jobTitle}</p>}
@@ -154,7 +154,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 type="date"
                 value={formData.assessmentDate}
                 onChange={(e) => handleInputChange("assessmentDate", e.target.value)}
-                className={errors.assessmentDate ? "border-destructive" : ""}
+                className={(errors.assessmentDate ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
               />
               {errors.assessmentDate && <p className="text-sm text-destructive">{errors.assessmentDate}</p>}
             </div>
@@ -165,7 +165,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
               type="submit"
               size="lg"
               disabled={isSubmitting}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-3 text-lg font-semibold shadow-lg disabled:opacity-50"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-3 text-lg font-semibold shadow-lg disabled:opacity-50 rounded-lg"
             >
               {isSubmitting ? "Submitting..." : "Start Assessment"}
             </Button>

@@ -45,7 +45,7 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
   ]
 
   return (
-    <Card className="bg-card border-0 shadow-xl">
+    <Card className="bg-card border border-primary/40 shadow-2xl rounded-xl">
       <CardHeader className="text-center">
         <CardTitle className="text-2xl text-card-foreground">Assessment Guidelines</CardTitle>
         <CardDescription className="text-muted-foreground">
@@ -61,7 +61,7 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {nistDomains.map((domain) => (
-              <div key={domain.code} className="p-4 bg-muted rounded-lg border">
+              <div key={domain.code} className="p-4 rounded-lg border border-primary/20 bg-primary/5">
                 <div className="flex items-start gap-3">
                   <Badge variant="secondary" className="bg-primary text-primary-foreground">
                     {domain.code}
@@ -77,7 +77,7 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
         </div>
 
         {/* Assessment Instructions */}
-        <div className="bg-muted p-6 rounded-lg">
+        <div className="p-6 rounded-lg border border-primary/20 bg-primary/5">
           <h3 className="text-lg font-semibold text-card-foreground mb-4 flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-accent" />
             Assessment Instructions
@@ -121,7 +121,7 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
         </div>
 
         {/* Contact Information */}
-        <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+        <div className="bg-primary/5 p-4 rounded-lg border border-primary/40">
           <p className="text-sm text-card-foreground">
             <strong>Need help?</strong> For any guidance in completing the assessment, please contact:{" "}
             <a href="mailto:bhaskar.maheshwari@rsm.com.kw" className="text-primary hover:underline">
@@ -134,7 +134,7 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
           <Button
             onClick={onNext}
             size="lg"
-            className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-white px-12 py-3 text-lg font-semibold"
+            className="bg-primary hover:bg-primary/90 text-white px-12 py-3 text-lg font-semibold rounded-lg shadow-lg"
           >
             Begin Assessment
             <ArrowRight className="ml-2 h-5 w-5" />

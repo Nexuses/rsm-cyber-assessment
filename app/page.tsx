@@ -103,38 +103,15 @@ export default function CyberAssessmentTool() {
       ))}
 
       {/* Header */}
-      <div className="bg-primary text-white">
-        <div className="px-6 py-12">
-          <div className="mx-auto max-w-4xl">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-4xl font-bold text-balance">Cyber Self Assessment Tool</h1>
-                <p className="mt-2 text-lg text-primary-foreground/80">NIST CSF 2.0 Based Assessment</p>
-              </div>
-              <div className="flex items-center">
-                <img
-                  src="https://cdn-nexlink.s3.us-east-2.amazonaws.com/rsm-international-vector-logo_2_eb7fb9d1-228a-426a-b682-c0d24dc736fa.jpg"
-                  alt="RSM International Logo"
-                  className="h-16 w-auto border-2 border-gray-300 p-2 rounded bg-white"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+      <div className="w-full">
+        <img
+          src="https://22527425.fs1.hubspotusercontent-na2.net/hubfs/22527425/RSM%20Kuwait%20ESG/Frame%201171275999.png"
+          alt="RSM Kuwait Header"
+          className="w-full h-auto"
+        />
       </div>
 
-      {/* Progress Bar */}
-      <div className="bg-muted px-6 py-4 border-b">
-        <div className="mx-auto max-w-4xl">
-          <div className="flex items-center justify-between text-muted-foreground text-sm mb-2">
-            <span>
-              Step {currentStep} of {totalSteps}
-            </span>
-            <span>{Math.round(progress)}% Complete</span>
-          </div>
-          <Progress value={progress} className="h-2" />
-        </div>
-      </div>
+      {/* Progress Bar removed as requested */}
 
       {/* Main Content */}
       <div className="px-6 py-8 bg-white">
