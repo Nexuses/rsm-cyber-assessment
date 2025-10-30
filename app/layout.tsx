@@ -5,9 +5,9 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'RSM Cyber Assessment Tool',
+  title: 'RSM In Kuwait’sCyber Assessment Tool',
   description: 'RSM In Kuwait’s Cyber Assessment tool helps organizations evaluate their cybersecurity maturity with the NIST CSF 2.0 framework, providing actionable insights to strengthen security.',
-  generator: 'RSM Cyber Assessment Tool',
+  generator: 'RSM In Kuwait’s Cyber Assessment Tool',
   icons: {
     icon: 'https://22527425.fs1.hubspotusercontent-na2.net/hubfs/22527425/RSM%20Kuwait%20ESG/Favicon.png',
   },
