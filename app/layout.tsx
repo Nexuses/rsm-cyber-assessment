@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'RSM In Kuwait’sCyber Assessment Tool',
+  title: 'RSM In Kuwait’s Cyber Assessment Tool',
   description: 'RSM In Kuwait’s Cyber Assessment tool helps organizations evaluate their cybersecurity maturity with the NIST CSF 2.0 framework, providing actionable insights to strengthen security.',
   generator: 'RSM In Kuwait’s Cyber Assessment Tool',
   icons: {
