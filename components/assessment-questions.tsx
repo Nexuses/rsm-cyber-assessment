@@ -249,7 +249,7 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             value={currentComment}
             onChange={(e) => setCurrentComment(e.target.value)}
             placeholder="Please provide additional details about your current processes, tools, challenges, or concerns..."
-            className="min-h-[100px] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/60"
+            className="min-h-[100px] focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:border-primary/60 border border-primary/30"
           />
         </div>
 
@@ -263,9 +263,6 @@ export function AssessmentQuestions({ onComplete, onBack }: AssessmentQuestionsP
             {currentQuestionIndex === 0 ? "Back to Guidelines" : "Previous"}
           </Button>
 
-          <div className="text-sm text-red-600 flex items-center">
-            All questions are mandatory
-          </div>
         </div>
       </CardContent>
     </Card>

@@ -26,12 +26,12 @@ export default function CyberAssessmentTool() {
   const totalSteps = 4
   const progress = (currentStep / totalSteps) * 100
 
-  const handlePersonalInfoSubmit = (info: PersonalInfo) => {
-    setPersonalInfo(info)
+  const handleGuidelinesNext = () => {
     setCurrentStep(2)
   }
 
-  const handleGuidelinesNext = () => {
+  const handlePersonalInfoSubmit = (info: PersonalInfo) => {
+    setPersonalInfo(info)
     setCurrentStep(3)
   }
 
@@ -105,7 +105,7 @@ export default function CyberAssessmentTool() {
       {/* Header */}
       <div className="w-full">
         <img
-          src="https://22527425.fs1.hubspotusercontent-na2.net/hubfs/22527425/RSM%20Kuwait%20ESG/Frame%201171275999.png"
+          src="https://22527425.fs1.hubspotusercontent-na2.net/hubfs/22527425/RSM%20Kuwait%20ESG/Frame%201171275999%20(1).png"
           alt="RSM Kuwait Header"
           className="w-full h-auto"
         />
@@ -116,9 +116,9 @@ export default function CyberAssessmentTool() {
       {/* Main Content */}
       <div className="px-6 py-8 bg-white">
         <div className="mx-auto max-w-4xl">
-          {currentStep === 1 && <PersonalInfoForm initialData={personalInfo} onSubmit={handlePersonalInfoSubmit} />}
+          {currentStep === 1 && <GuidelinesSection onNext={handleGuidelinesNext} />}
 
-          {currentStep === 2 && <GuidelinesSection onNext={handleGuidelinesNext} />}
+          {currentStep === 2 && <PersonalInfoForm initialData={personalInfo} onSubmit={handlePersonalInfoSubmit} />}
 
           {currentStep === 3 && (
             <AssessmentQuestions onComplete={handleAssessmentComplete} onBack={() => setCurrentStep(2)} />

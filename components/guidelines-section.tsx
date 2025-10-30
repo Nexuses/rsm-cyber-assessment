@@ -120,17 +120,14 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
           </div>
         </div>
 
-        {/* Contact Information */}
-        <div className="bg-primary/5 p-4 rounded-lg border border-primary/40">
-          <p className="text-sm text-card-foreground">
-            <strong>Need help?</strong> For any guidance in completing the assessment, please contact:{" "}
-            <a href="mailto:bhaskar.maheshwari@rsm.com.kw" className="text-primary hover:underline">
-              bhaskar.maheshwari@rsm.com.kw
-            </a>
+        {/* Disclaimer */}
+        <div className="p-4 rounded-lg border border-primary/20 bg-primary/5">
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            <strong className="text-card-foreground">Disclaimer:</strong> This assessment does not guarantee the detection of all existing or potential vulnerabilities, threats, or exploits. It reflects the organization's security posture at the time of testing solely based on your responses to the assessment questions. The assessment report is intended solely for your internal use and must not be distributed, disclosed, or relied upon by third parties. RSM shall not be liable for any losses, damages, claims, or expenses arising from, or in connection with, the use of the assessment results.
           </p>
         </div>
 
-        <div className="flex justify-center pt-6">
+        <div className="flex flex-col items-center gap-4 pt-6">
           <Button
             onClick={onNext}
             size="lg"
@@ -139,6 +136,27 @@ export function GuidelinesSection({ onNext }: GuidelinesSectionProps) {
             Begin Assessment
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
+          <p className="text-sm text-muted-foreground text-center">
+            By clicking "Begin Assessment", you agree to our{" "}
+            <a
+              href="https://www.rsm.global/kuwait/privacy-notice"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              privacy policy
+            </a>
+            {" "}and{" "}
+            <a
+              href="https://www.rsm.global/kuwait/securitycybersecurity-positioning-statement"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              terms and conditions
+            </a>
+            .
+          </p>
         </div>
       </CardContent>
     </Card>

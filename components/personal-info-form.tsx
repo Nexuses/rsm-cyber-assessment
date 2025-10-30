@@ -28,10 +28,9 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
     }
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required"
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
+    const emailError = validateEmail(formData.email)
+    if (emailError) {
+      newErrors.email = emailError
     }
     if (!formData.companyName.trim()) {
       newErrors.companyName = "Company name is required"
@@ -56,10 +55,59 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
     }
   }
 
+  const validateEmail = (email: string): string | undefined => {
+    if (!email.trim()) {
+      return "Email is required"
+    }
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      return "Please enter a valid email address"
+    }
+    
+    // Check for personal email domains
+    const emailParts = email.toLowerCase().split("@")
+    if (emailParts.length === 2) {
+      const emailDomain = emailParts[1]
+      const personalEmailDomains = [
+        "gmail.com",
+        "yahoo.com",
+        "outlook.com",
+        "hotmail.com",
+        "aol.com",
+        "icloud.com",
+        "protonmail.com",
+        "proton.me",
+        "yandex.com",
+        "mail.com",
+        "gmx.com",
+        "live.com",
+        "msn.com",
+        "zoho.com",
+        "yahoo.co.uk",
+        "yahoo.co.jp",
+        "mail.ru",
+        "inbox.com",
+        "fastmail.com",
+        "rediffmail.com"
+      ]
+      
+      if (personalEmailDomains.includes(emailDomain)) {
+        return "Please use your business email address. Personal email addresses are not allowed."
+      }
+    }
+    return undefined
+  }
+
   const handleInputChange = (field: keyof PersonalInfo, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: undefined }))
+    }
+  }
+
+  const handleEmailBlur = () => {
+    const emailError = validateEmail(formData.email)
+    if (emailError) {
+      setErrors((prev) => ({ ...prev, email: emailError }))
     }
   }
 
@@ -82,7 +130,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="firstName"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange("firstName", e.target.value)}
-                className={(errors.firstName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                className={(errors.firstName ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your first name"
               />
               {errors.firstName && <p className="text-sm text-destructive">{errors.firstName}</p>}
@@ -96,7 +144,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="lastName"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange("lastName", e.target.value)}
-                className={(errors.lastName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                className={(errors.lastName ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your last name"
               />
               {errors.lastName && <p className="text-sm text-destructive">{errors.lastName}</p>}
@@ -111,7 +159,8 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={(errors.email ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                onBlur={handleEmailBlur}
+                className={(errors.email ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="your.email@company.com"
               />
               {errors.email && <p className="text-sm text-destructive">{errors.email}</p>}
@@ -125,7 +174,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="companyName"
                 value={formData.companyName}
                 onChange={(e) => handleInputChange("companyName", e.target.value)}
-                className={(errors.companyName ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                className={(errors.companyName ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your company name"
               />
               {errors.companyName && <p className="text-sm text-destructive">{errors.companyName}</p>}
@@ -139,7 +188,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 id="jobTitle"
                 value={formData.jobTitle}
                 onChange={(e) => handleInputChange("jobTitle", e.target.value)}
-                className={(errors.jobTitle ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                className={(errors.jobTitle ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
                 placeholder="Enter your job title"
               />
               {errors.jobTitle && <p className="text-sm text-destructive">{errors.jobTitle}</p>}
@@ -154,7 +203,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
                 type="date"
                 value={formData.assessmentDate}
                 onChange={(e) => handleInputChange("assessmentDate", e.target.value)}
-                className={(errors.assessmentDate ? "border-destructive " : "") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
+                className={(errors.assessmentDate ? "border-destructive " : "border-[#3F9C35] ") + "focus-visible:ring-2 focus-visible:ring-primary/50 focus-visible:border-primary/60"}
               />
               {errors.assessmentDate && <p className="text-sm text-destructive">{errors.assessmentDate}</p>}
             </div>
@@ -167,7 +216,7 @@ export function PersonalInfoForm({ initialData, onSubmit }: PersonalInfoFormProp
               disabled={isSubmitting}
               className="bg-primary hover:bg-primary/90 text-primary-foreground px-12 py-3 text-lg font-semibold shadow-lg disabled:opacity-50 rounded-lg"
             >
-              {isSubmitting ? "Submitting..." : "Start Assessment"}
+              {isSubmitting ? "Submitting..." : "Continue to Questions"}
             </Button>
           </div>
         </form>
